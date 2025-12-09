@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Erfassungs- und Beratungsbogen PKV</title>
+  <style>
+    :root {
+      --primary: #005ea8;
+      --primary-light: #e5f1fb;
+      --accent: #ffb74d;
+      --accent-soft: #fff3e0;
+      --bg: #f2f5ff;
+      --border: #d0d7e2;
+      --text-main: #263238;
+      --text-muted: #546e7a;
+      --danger: #c62828;
+      --success: #2e7d32;
+      --card-radius: 14px;
+      --card-shadow: 0 8px 20px rgba(15, 35, 95, 0.07);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, #e3f2fd 0, #f2f5ff 45%, #ffffff 100%);
+      color: var(--text-main);
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 24px auto 40px;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(20, 40, 90, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: -120px;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(0,94,168,0.1) 0, transparent 45%),
+        radial-gradient(circle at 100% 0%, rgba(255,183,77,0.14) 0, transparent 45%);
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    header {
+      border-bottom: 2px solid rgba(229,241,251,0.9);
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    header .title-block {
+      max-width: 70%;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.9rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h1 span.logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffffff 0, #bbdefb 40%, #0d47a1 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 10px rgba(13,71,161,0.3);
+    }
+
+    h2 {
+      margin: 26px 0 12px;
+      font-size: 1.3rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: var(--primary-light);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.09);
+    }
+
+    h3 {
+      margin: 18px 0 8px;
+      font-size: 1.05rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    h3::before {
+      content: "◆";
+      font-size: 0.7rem;
+      color: var(--accent);
+    }
+
+    p.small-note {
+      margin: 2px 0 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .button-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      background: #fff;
+      color: var(--text-main);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s ease;
+    }
+
+    button span.btn-icon {
+      font-size: 1.05rem;
+    }
+
+    button.primary {
+      background: linear-gradient(120deg, #005ea8, #2196f3);
+      color: #fff;
+    }
+
+    button.secondary {
+      border-color: var(--border);
+      background: #fff;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+
+    .progress-tracker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 10px 0 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0,94,168,0.08), rgba(255,183,77,0.12));
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .progress-label {
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+
+    .progress-steps {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .progress-step {
+      flex: 1;
+      position: relative;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.8);
+      overflow: hidden;
+    }
+
+    .progress-step::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, #005ea8, #42a5f5);
+      opacity: 0.32;
+    }
+
+    .progress-bubbles {
+      display: flex;
+      gap: 6px;
+      margin-left: 4px;
+    }
+
+    .progress-bubble {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid rgba(0,94,168,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .progress-bubble.active {
+      background: var(--primary);
+      border-color: #fff;
+      color: #fff;
+      box-shadow: 0 0 0 3px rgba(0,94,168,0.18);
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: var(--card-radius);
+      border: 1px solid rgba(208,215,226,0.9);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(0,94,168,0.07));
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .tag-soft {
+      background: rgba(255,183,77,0.2);
+      color: #ff8f00;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 10px 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 0.9rem;
+    }
+
+    label {
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      padding: 6px 8px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.06s ease;
+      background: rgba(255,255,255,0.96);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(0,94,168,0.16);
+      transform: translateY(-0.5px);
+    }
+
+    textarea {
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    .inline-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      font-size: 0.85rem;
+    }
+
+    .inline-options label {
+      font-weight: 400;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(245,247,255,0.9);
+      border: 1px solid transparent;
+    }
+
+    .inline-options input[type="checkbox"],
+    .inline-options input[type="radio"] {
+      accent-color: var(--primary);
+    }
+
+    .inline-options label:hover {
+      border-color: rgba(0,94,168,0.25);
+      background: rgba(229,241,251,0.9);
+    }
+
+    .section-divider {
+      margin: 20px 0 16px;
+      border: 0;
+      border-top: 1px dashed rgba(208,215,226,0.9);
+    }
+
+    .section-caption {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .highlight-box {
+      border-radius: var(--card-radius);
+      border: 1px dashed var(--primary);
+      background: linear-gradient(135deg, #fefaf4 0, #fffdf8 60%, #ffffff 100%);
+      padding: 12px 14px;
+      margin-top: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .highlight-box::before {
+      content: "";
+      position: absolute;
+      left: -30px;
+      bottom: -30px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(255,183,77,0.3));
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .checkbox-group-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .checkbox-group-title::before {
+      content: "★";
+      font-size: 0.8rem;
+      color: #ffb300;
+    }
+
+    .muted {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .subsection-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin: 10px 0 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .subsection-title::before {
+      content: "➜";
+      font-size: 0.8rem;
+      color: var(--primary);
+    }
+
+    .person-section {
+      margin-bottom: 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.9);
+      box-shadow: var(--card-shadow);
+      border: 1px solid rgba(208,215,226,0.9);
+      overflow: hidden;
+    }
+
+    .person-section > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: linear-gradient(90deg, rgba(0,94,168,0.06), rgba(255,183,77,0.08));
+      font-size: 0.95rem;
+    }
+
+    .person-section > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .person-summary-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .person-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      font-size: 14px;
+    }
+
+    .person-section[open] > summary {
+      border-bottom: 1px solid rgba(208,215,226,0.9);
+    }
+
+    .person-card {
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+      margin: 0;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 12px 0 4px;
+      border-top: 1px dashed rgba(208,215,226,0.9);
+      line-height: 1.4;
+    }
+
+    .footer-note a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .footer-note a:hover {
+      text-decoration: underline;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        margin: 8px;
+        padding: 16px;
+      }
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      header .title-block {
+        max-width: 100%;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+      .progress-tracker {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .progress-bubbles {
+        margin-left: 0;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+      .page {
+        box-shadow: none;
+        margin: 0;
+        border-radius: 0;
+      }
+      header {
+        border-bottom-color: #ccc;
+      }
+      .button-bar,
+      .progress-tracker {
+        display: none !important;
+      }
+      .card::before,
+      .page::before,
+      .highlight-box::before {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="title-block">
+      <h1>
+        <span class="logo-icon">🩺</span>
+        Erfassungs- &amp; Beratungsbogen PKV
+      </h1>
+      <p class="small-note">
+        Stand: 2026 &nbsp;|&nbsp; Version 12.2025<br>
+        Bitte sorgfältig und gut lesbar ausfüllen. Alle Felder sind beschreibbar – je genauer, desto besser deine Absicherung. ✔️
+      </p>
+    </div>
+    <div class="button-bar">
+      <button class="primary" type="button" onclick="window.print()">
+        <span class="btn-icon">🖨️</span> Drucken
+      </button>
+      <button class="secondary" type="reset" form="pkvForm">
+        <span class="btn-icon">🔄</span> Zurücksetzen
+      </button>
+    </div>
+  </header>
+
+  <div class="progress-tracker">
+    <div class="progress-label">
+      <span>🚦</span> Fortschritt: alle Bereiche entspannt durchgehen
+    </div>
+    <div class="progress-steps">
+      <div class="progress-step"></div>
+    </div>
+    <div class="progress-bubbles">
+      <div class="progress-bubble active">1</div>
+      <div class="progress-bubble">2</div>
+      <div class="progress-bubble">3</div>
+      <div class="progress-bubble">4</div>
+      <div class="progress-bubble">5</div>
+      <div class="progress-bubble">6</div>
+      <div class="progress-bubble">7</div>
+      <div class="progress-bubble">8</div>
+      <div class="progress-bubble">9</div>
+    </div>
+  </div>
+
+  <form id="pkvForm">
+
+    <!-- PERSONENDATEN BIS ZU 5 PERSONEN -->
+    <h2><span class="section-icon">👤</span>1. Personendaten (max. 5 Personen)</h2>
+
+    <!-- PERSON 1 -->
+    <details class="person-section" open>
+      <summary>
+        <div class="person-summary-left">
+          <span class="person-avatar">1</span>
+          <span><strong>Person 1 – Hauptperson</strong></span>
+        </div>
+        <span class="tag-soft">auf-/zuklappen</span>
+      </summary>
+      <div class="card person-card">
+        <div class="grid-2">
+          <div class="field">
+            <label>Name / Vorname</label>
+            <input type="text" name="p1_name" placeholder="Name, Vorname">
+          </div>
+          <div class="field">
+            <label>Geburtsdatum</label>
+            <div class="grid-3">
+              <select name="p1_geb_tag" class="geb-tag"></select>
+              <select name="p1_geb_monat" class="geb-monat"></select>
+              <select name="p1_geb_jahr" class="geb-jahr"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Familienstand</label>
+            <div class="inline-options">
+              <label><input type="radio" name="p1_familienstand" value="ledig"> ledig</label>
+              <label><input type="radio" name="p1_familienstand" value="verheiratet"> verheiratet</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Kinder</label>
+            <select name="p1_kinder">
+              <option value="">Bitte wählen</option>
+              <option value="0">0 Kinder</option>
+              <option value="1">1 Kind</option>
+              <option value="2">2 Kinder</option>
+              <option value="3">3 Kinder</option>
+              <option value="4">4 Kinder</option>
+              <option value="5">5+ Kinder</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Berufsstatus</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p1_status_angestellt" value="angestellt"> Angestellt</label>
+              <label><input type="checkbox" name="p1_status_selbst" value="selbst"> Selbstständig</label>
+              <label><input type="checkbox" name="p1_status_frei" value="freiberuflich"> Freiberuflich</label>
+              <label><input type="checkbox" name="p1_status_beihilfe" value="beihilfe"> Beihilfe</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Wiedervorlage (Datum/Notiz)</label>
+            <input type="text" name="p1_wiedervorlage" placeholder="z. B. 03/2026 – Rückruf vereinbaren">
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <h3>Krankenversicherung aktuell</h3>
+        <div class="grid-2">
+          <div class="field">
+            <label>GKV versichert</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p1_gkv_versichert" value="ja"> ja</label>
+            </div>
+            <input type="text" name="p1_gkv_kasse" placeholder="Welche Krankenkasse?">
+          </div>
+          <div class="field">
+            <label>PKV versichert</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p1_pkv_versichert" value="ja"> ja</label>
+            </div>
+            <input type="text" name="p1_pkv_gesellschaft" placeholder="Welche Gesellschaft?">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>PKV Details (Tarife, Beiträge, seit wann versichert, Übertragungswerte ab 2009)</label>
+          <textarea name="p1_pkv_details" placeholder="Tarife, Beitragshöhe, Versicherungsbeginn, mögliche Übertragungswerte aus Vorversicherung (Neuverträge ab 2009)"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <!-- PERSON 2 -->
+    <details class="person-section" id="person2_section">
+      <summary>
+        <div class="person-summary-left">
+          <span class="person-avatar">2</span>
+          <span><strong>Person 2 – Mitversicherte Person</strong></span>
+        </div>
+        <span class="tag-soft">optional</span>
+      </summary>
+      <div class="card person-card">
+        <div class="grid-2">
+          <div class="field">
+            <label>Name / Vorname</label>
+            <input type="text" name="p2_name">
+          </div>
+          <div class="field">
+            <label>Geburtsdatum</label>
+            <div class="grid-3">
+              <select name="p2_geb_tag" class="geb-tag"></select>
+              <select name="p2_geb_monat" class="geb-monat"></select>
+              <select name="p2_geb_jahr" class="geb-jahr"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Familienstand</label>
+            <div class="inline-options">
+              <label><input type="radio" name="p2_familienstand" value="ledig"> ledig</label>
+              <label><input type="radio" name="p2_familienstand" value="verheiratet"> verheiratet</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Kinder</label>
+            <select name="p2_kinder">
+              <option value="">Bitte wählen</option>
+              <option value="0">0 Kinder</option>
+              <option value="1">1 Kind</option>
+              <option value="2">2 Kinder</option>
+              <option value="3">3 Kinder</option>
+              <option value="4">4 Kinder</option>
+              <option value="5">5+ Kinder</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Berufsstatus</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p2_status_angestellt" value="angestellt"> Angestellt</label>
+              <label><input type="checkbox" name="p2_status_selbst" value="selbst"> Selbstständig</label>
+              <label><input type="checkbox" name="p2_status_frei" value="freiberuflich"> Freiberuflich</label>
+              <label><input type="checkbox" name="p2_status_beihilfe" value="beihilfe"> Beihilfe</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Wiedervorlage (Datum/Notiz)</label>
+            <input type="text" name="p2_wiedervorlage">
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <h3>Krankenversicherung aktuell</h3>
+        <div class="grid-2">
+          <div class="field">
+            <label>GKV versichert</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p2_gkv_versichert" value="ja"> ja</label>
+            </div>
+            <input type="text" name="p2_gkv_kasse" placeholder="Welche Krankenkasse?">
+          </div>
+          <div class="field">
+            <label>PKV versichert</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p2_pkv_versichert" value="ja"> ja</label>
+            </div>
+            <input type="text" name="p2_pkv_gesellschaft" placeholder="Welche Gesellschaft?">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>PKV Details (Tarife, Beiträge, seit wann versichert, Übertragungswerte ab 2009)</label>
+          <textarea name="p2_pkv_details"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <!-- PERSON 3 -->
+    <details class="person-section" id="person3_section">
+      <summary>
+        <div class="person-summary-left">
+          <span class="person-avatar">3</span>
+          <span><strong>Person 3 – Mitversicherte Person</strong></span>
+        </div>
+        <span class="tag-soft">optional</span>
+      </summary>
+      <div class="card person-card">
+        <div class="grid-2">
+          <div class="field">
+            <label>Name / Vorname</label>
+            <input type="text" name="p3_name">
+          </div>
+          <div class="field">
+            <label>Geburtsdatum</label>
+            <div class="grid-3">
+              <select name="p3_geb_tag" class="geb-tag"></select>
+              <select name="p3_geb_monat" class="geb-monat"></select>
+              <select name="p3_geb_jahr" class="geb-jahr"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Familienstand</label>
+            <div class="inline-options">
+              <label><input type="radio" name="p3_familienstand" value="ledig"> ledig</label>
+              <label><input type="radio" name="p3_familienstand" value="verheiratet"> verheiratet</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Kinder</label>
+            <select name="p3_kinder">
+              <option value="">Bitte wählen</option>
+              <option value="0">0 Kinder</option>
+              <option value="1">1 Kind</option>
+              <option value="2">2 Kinder</option>
+              <option value="3">3 Kinder</option>
+              <option value="4">4 Kinder</option>
+              <option value="5">5+ Kinder</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Berufsstatus</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p3_status_angestellt" value="angestellt"> Angestellt</label>
+              <label><input type="checkbox" name="p3_status_selbst" value="selbst"> Selbstständig</label>
+              <label><input type="checkbox" name="p3_status_frei" value="freiberuflich"> Freiberuflich</label>
+              <label><input type="checkbox" name="p3_status_beihilfe" value="beihilfe"> Beihilfe</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Wiedervorlage (Datum/Notiz)</label>
+            <input type="text" name="p3_wiedervorlage">
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <h3>Krankenversicherung aktuell</h3>
+        <div class="grid-2">
+          <div class="field">
+            <label>GKV versichert</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p3_gkv_versichert" value="ja"> ja</label>
+            </div>
+            <input type="text" name="p3_gkv_kasse" placeholder="Welche Krankenkasse?">
+          </div>
+          <div class="field">
+            <label>PKV versichert</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p3_pkv_versichert" value="ja"> ja</label>
+            </div>
+            <input type="text" name="p3_pkv_gesellschaft" placeholder="Welche Gesellschaft?">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>PKV Details (Tarife, Beiträge, seit wann versichert, Übertragungswerte ab 2009)</label>
+          <textarea name="p3_pkv_details"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <!-- PERSON 4 -->
+    <details class="person-section" id="person4_section">
+      <summary>
+        <div class="person-summary-left">
+          <span class="person-avatar">4</span>
+          <span><strong>Person 4 – Mitversicherte Person</strong></span>
+        </div>
+        <span class="tag-soft">optional</span>
+      </summary>
+      <div class="card person-card">
+        <div class="grid-2">
+          <div class="field">
+            <label>Name / Vorname</label>
+            <input type="text" name="p4_name">
+          </div>
+          <div class="field">
+            <label>Geburtsdatum</label>
+            <div class="grid-3">
+              <select name="p4_geb_tag" class="geb-tag"></select>
+              <select name="p4_geb_monat" class="geb-monat"></select>
+              <select name="p4_geb_jahr" class="geb-jahr"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Familienstand</label>
+            <div class="inline-options">
+              <label><input type="radio" name="p4_familienstand" value="ledig"> ledig</label>
+              <label><input type="radio" name="p4_familienstand" value="verheiratet"> verheiratet</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Kinder</label>
+            <select name="p4_kinder">
+              <option value="">Bitte wählen</option>
+              <option value="0">0 Kinder</option>
+              <option value="1">1 Kind</option>
+              <option value="2">2 Kinder</option>
+              <option value="3">3 Kinder</option>
+              <option value="4">4 Kinder</option>
+              <option value="5">5+ Kinder</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Berufsstatus</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p4_status_angestellt" value="angestellt"> Angestellt</label>
+              <label><input type="checkbox" name="p4_status_selbst" value="selbst"> Selbstständig</label>
+              <label><input type="checkbox" name="p4_status_frei" value="freiberuflich"> Freiberuflich</label>
+              <label><input type="checkbox" name="p4_status_beihilfe" value="beihilfe"> Beihilfe</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Wiedervorlage (Datum/Notiz)</label>
+            <input type="text" name="p4_wiedervorlage">
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <h3>Krankenversicherung aktuell</h3>
+        <div class="grid-2">
+          <div class="field">
+            <label>GKV versichert</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p4_gkv_versichert" value="ja"> ja</label>
+            </div>
+            <input type="text" name="p4_gkv_kasse" placeholder="Welche Krankenkasse?">
+          </div>
+          <div class="field">
+            <label>PKV versichert</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p4_pkv_versichert" value="ja"> ja</label>
+            </div>
+            <input type="text" name="p4_pkv_gesellschaft" placeholder="Welche Gesellschaft?">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>PKV Details (Tarife, Beiträge, seit wann versichert, Übertragungswerte ab 2009)</label>
+          <textarea name="p4_pkv_details"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <!-- PERSON 5 -->
+    <details class="person-section" id="person5_section">
+      <summary>
+        <div class="person-summary-left">
+          <span class="person-avatar">5</span>
+          <span><strong>Person 5 – Mitversicherte Person</strong></span>
+        </div>
+        <span class="tag-soft">optional</span>
+      </summary>
+      <div class="card person-card">
+        <div class="grid-2">
+          <div class="field">
+            <label>Name / Vorname</label>
+            <input type="text" name="p5_name">
+          </div>
+          <div class="field">
+            <label>Geburtsdatum</label>
+            <div class="grid-3">
+              <select name="p5_geb_tag" class="geb-tag"></select>
+              <select name="p5_geb_monat" class="geb-monat"></select>
+              <select name="p5_geb_jahr" class="geb-jahr"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Familienstand</label>
+            <div class="inline-options">
+              <label><input type="radio" name="p5_familienstand" value="ledig"> ledig</label>
+              <label><input type="radio" name="p5_familienstand" value="verheiratet"> verheiratet</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Kinder</label>
+            <select name="p5_kinder">
+              <option value="">Bitte wählen</option>
+              <option value="0">0 Kinder</option>
+              <option value="1">1 Kind</option>
+              <option value="2">2 Kinder</option>
+              <option value="3">3 Kinder</option>
+              <option value="4">4 Kinder</option>
+              <option value="5">5+ Kinder</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Berufsstatus</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p5_status_angestellt" value="angestellt"> Angestellt</label>
+              <label><input type="checkbox" name="p5_status_selbst" value="selbst"> Selbstständig</label>
+              <label><input type="checkbox" name="p5_status_frei" value="freiberuflich"> Freiberuflich</label>
+              <label><input type="checkbox" name="p5_status_beihilfe" value="beihilfe"> Beihilfe</label>
+            </div>
+          </div>
+          <div class="field">
+            <label>Wiedervorlage (Datum/Notiz)</label>
+            <input type="text" name="p5_wiedervorlage">
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <h3>Krankenversicherung aktuell</h3>
+        <div class="grid-2">
+          <div class="field">
+            <label>GKV versichert</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p5_gkv_versichert" value="ja"> ja</label>
+            </div>
+            <input type="text" name="p5_gkv_kasse" placeholder="Welche Krankenkasse?">
+          </div>
+          <div class="field">
+            <label>PKV versichert</label>
+            <div class="inline-options">
+              <label><input type="checkbox" name="p5_pkv_versichert" value="ja"> ja</label>
+            </div>
+            <input type="text" name="p5_pkv_gesellschaft" placeholder="Welche Gesellschaft?">
+          </div>
+        </div>
+
+        <div class="field">
+          <label>PKV Details (Tarife, Beiträge, seit wann versichert, Übertragungswerte ab 2009)</label>
+          <textarea name="p5_pkv_details"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <!-- GRENZWERTE & BEITRAGSWERTE 2026 -->
+    <h2><span class="section-icon">📊</span>2. Kennzahlen GKV / PKV 2026 (vorbelegt, aber überschreibbar)</h2>
+    <div class="card">
+      <div class="grid-2">
+        <div class="field">
+          <label>Jahresarbeitsentgeltgrenze 2026</label>
+          <input type="text" name="jaeg_2026" value="77.400 €">
+        </div>
+        <div class="field">
+          <label>Beitragsbemessungsgrenze 2026 (mtl. / Jahr)</label>
+          <input type="text" name="bbg_2026" value="5.812,50 € mtl. (69.750 € p.a.)">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Ø Höchstbeitrag kinderlos GKV 2026</label>
+          <input type="text" name="gkv_hoechstbeitrag_2026" value="1.261,31 € mtl.">
+        </div>
+        <div class="field">
+          <label>Max. Arbeitgeberzuschuss KV 2026</label>
+          <input type="text" name="max_ag_zuschuss_kv_2026" value="508,59 €">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Max. AG-Zuschuss Pflegepflichtversicherung 2026</label>
+          <input type="text" name="max_ag_zuschuss_pv_2026" value="104,63 €">
+        </div>
+        <div class="field">
+          <label>GKV allgemeiner Beitragssatz</label>
+          <input type="text" name="gkv_allg_beitragssatz" value="14,6 %">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Durchschnittlicher Zusatzbeitrag</label>
+          <input type="text" name="gkv_zusatzbeitrag" value="2,9 %">
+        </div>
+        <div class="field">
+          <label>Pflegepflicht-Beitrag</label>
+          <input type="text" name="pflegepflicht_beitrag" value="3,6 % + 0,6 % kinderlos (AN voll finanziert)">
+        </div>
+      </div>
+      <p class="section-caption">
+        Alle Werte sind vorbelegt und können bei Änderungen der gesetzlichen Grundlagen manuell angepasst werden.
+      </p>
+    </div>
+
+    <!-- KEINE KOMPROMISSE / SB-STUFEN -->
+    <h2><span class="section-icon">🛡️</span>3. Grundsätze &amp; Selbstbehalt</h2>
+    <div class="card">
+      <div class="field">
+        <span class="checkbox-group-title">Keine Kompromisse bei der Gesundheitsabsicherung</span>
+        <div class="inline-options">
+          <label><input type="checkbox" name="keine_kompromisse" value="ja"> Ich wünsche keine Kompromisse bei der Gesundheitsabsicherung.</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Preis bestimmend – SB-Stufen (ambulant 80 % Leistung)</label>
+        <div class="inline-options">
+          <label><input type="checkbox" name="sb_stufe" value="400"> max. 400 € SB p.a.</label>
+          <label><input type="checkbox" name="sb_stufe" value="800"> 800 € SB p.a.</label>
+          <label><input type="checkbox" name="sb_stufe" value="1600"> 1.600 € SB p.a.</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Top-Grundabsicherung</label>
+        <div class="highlight-box">
+          <div class="inline-options">
+            <label><input type="checkbox" name="top_grundabsicherung" value="ohne_zusatz"> Zunächst ohne Zusatzbausteine</label>
+          </div>
+          <div class="subsection-title">1. Klasse Zuwahl:</div>
+          <div class="inline-options">
+            <label><input type="checkbox" name="zuwahl_ambulant" value="ja"> ambulant</label>
+            <label><input type="checkbox" name="zuwahl_stationaer" value="ja"> stationär</label>
+            <label><input type="checkbox" name="zuwahl_zahn" value="ja"> zahn</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABSICHERUNG IM KRANKHEITSFALL / KT -->
+    <h2><span class="section-icon">💶</span>4. Absicherung im Krankheitsfall (Krankentagegeld)</h2>
+    <div class="card">
+      <div class="field">
+        <div class="inline-options">
+          <label><input type="checkbox" name="kt_allgemein" value="ja"> Absicherung im Krankheitsfall (Lohnfortzahlung) kann zu 100 % abgesichert werden.</label>
+        </div>
+      </div>
+
+      <!-- KT Arbeitnehmer -->
+      <div class="highlight-box" id="kt_block_an">
+        <div class="subsection-title">Krankentagegeld für PKV-Arbeitnehmer <span class="muted">(nur relevant, wenn „Angestellt“ gewählt wurde)</span></div>
+        <div class="grid-3">
+          <div class="field">
+            <label>Karenzzeit</label>
+            <select name="kt_an_karenz">
+              <option value="">Bitte wählen</option>
+              <option value="KT-AN43">KT-AN43</option>
+              <option value="KT-AN92">KT-AN92</option>
+              <option value="KT-AN183">KT-AN183</option>
+              <option value="KT-AN274">KT-AN274</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Höhe in € (pro Tag)</label>
+            <input type="number" name="kt_an_hoehe" placeholder="z. B. 160">
+          </div>
+          <div class="field">
+            <label>Monatliches Netto</label>
+            <input type="number" name="kt_an_monatliches_netto" placeholder="Nettoeinkommen">
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="field">
+            <label>Monatliches Brutto</label>
+            <input type="number" name="kt_an_monatliches_brutto">
+          </div>
+          <div class="field">
+            <label>Summe Jahressonderzahlungen (netto)</label>
+            <input type="number" name="kt_an_jahressonderzahlungen">
+          </div>
+          <div class="field">
+            <label>Monatlicher KV-/PV-Beitrag bei BK/UKV</label>
+            <input type="number" name="kt_an_kv_pv">
+          </div>
+        </div>
+        <p class="section-caption">
+          Maximaler Absicherungsbedarf orientiert sich an Netto-Einkommen + anteiligen Sonderzahlungen abzüglich bereits bestehender Absicherungen.
+        </p>
+      </div>
+
+      <!-- KT Selbstständige -->
+      <div class="highlight-box" id="kt_block_s">
+        <div class="subsection-title">Krankentagegeld für PKV-Selbstständige <span class="muted">(nur relevant, wenn „Selbstständig“ gewählt wurde)</span></div>
+        <div class="grid-3">
+          <div class="field">
+            <label>Karenzzeit</label>
+            <select name="kt_s_karenz">
+              <option value="">Bitte wählen</option>
+              <option value="KT-S15">KT-S15</option>
+              <option value="KT-S22">KT-S22</option>
+              <option value="KT-S29">KT-S29</option>
+              <option value="KT-43">KT-43</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Höhe in € (pro Tag)</label>
+            <input type="number" name="kt_s_hoehe" placeholder="z. B. 160">
+          </div>
+          <div class="field">
+            <label>Monatliches Netto (Gewinn aus selbstständiger Tätigkeit)</label>
+            <input type="number" name="kt_s_netto">
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="field">
+            <label>Monatsbeitrag Rentenversicherung</label>
+            <input type="number" name="kt_s_rente">
+          </div>
+          <div class="field">
+            <label>Monatlicher KV-/PV-Beitrag</label>
+            <input type="number" name="kt_s_kv_pv">
+          </div>
+          <div class="field">
+            <label>Maximaler Absicherungsbedarf (Beraternotiz)</label>
+            <input type="text" name="kt_s_max_bedarf" placeholder="Berechnung / Notiz">
+          </div>
+        </div>
+      </div>
+
+      <!-- KT Freiberufler -->
+      <div class="highlight-box" id="kt_block_f">
+        <div class="subsection-title">Krankentagegeld für PKV-Freiberufler <span class="muted">(nur relevant, wenn „Freiberuflich“ gewählt wurde)</span></div>
+        <div class="grid-3">
+          <div class="field">
+            <label>Karenzzeit</label>
+            <select name="kt_f_karenz">
+              <option value="">Bitte wählen</option>
+              <option value="KF-15">KF-15</option>
+              <option value="KF-22">KF-22</option>
+              <option value="KF-29">KF-29</option>
+              <option value="KF-43">KF-43</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Höhe in € (pro Tag)</label>
+            <input type="number" name="kt_f_hoehe" placeholder="z. B. 160">
+          </div>
+          <div class="field">
+            <label>Monatliches Netto (Gewinn aus freiberuflicher Tätigkeit)</label>
+            <input type="number" name="kt_f_netto">
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="field">
+            <label>Monatsbeitrag Rentenversicherung</label>
+            <input type="number" name="kt_f_rente">
+          </div>
+          <div class="field">
+            <label>Monatlicher KV-/PV-Beitrag</label>
+            <input type="number" name="kt_f_kv_pv">
+          </div>
+          <div class="field">
+            <label>Maximaler Absicherungsbedarf (Beraternotiz)</label>
+            <input type="text" name="kt_f_max_bedarf" placeholder="Berechnung / Notiz">
+          </div>
+        </div>
+      </div>
+
+      <!-- Platz für weiteren Punkt -->
+      <div class="field" style="margin-top: 10px;">
+        <label>Weitere Vereinbarung / Punkt (Platzhalter)</label>
+        <textarea name="kt_weiterer_punkt" placeholder="Individueller zusätzlicher Punkt zur Absicherung im Krankheitsfall"></textarea>
+      </div>
+    </div>
+
+    <!-- SONDERZAHLUNGEN ZUR BEITRAGSABSICHERUNG IM ALTER -->
+    <h2><span class="section-icon">⏳</span>5. Sonderzahlungen zur Beitragsabsicherung im Alter</h2>
+    <div class="card">
+      <div class="grid-2">
+        <div class="field">
+          <label>Monatliche Sonderzahlung (in Schritten à 50 €)</label>
+          <select name="sonderzahlung_alter">
+            <option value="">Bitte wählen</option>
+            <option value="200">200 €</option>
+            <option value="250">250 €</option>
+            <option value="300">300 €</option>
+            <option value="350">350 €</option>
+            <option value="400">400 €</option>
+            <option value="450">450 €</option>
+            <option value="500">500 €</option>
+            <option value="550">550 €</option>
+            <option value="600">600 €</option>
+            <option value="650">650 €</option>
+            <option value="700">700 €</option>
+            <option value="750">750 €</option>
+            <option value="800">800 €</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>(frei beschriftbares Feld)</label>
+          <input type="text" name="sonderzahlung_beschriftung">
+        </div>
+      </div>
+    </div>
+
+    <!-- ABSICHERUNGSWÜNSCHE -->
+    <h2><span class="section-icon">✨</span>6. Absicherungswünsche (Leistungsumfang)</h2>
+    <div class="card">
+      <div class="field">
+        <span class="checkbox-group-title">Leistungen (zum Ankreuzen)</span>
+        <div class="inline-options">
+          <label><input type="checkbox" name="wunsch_top_zahn" value="ja"> Top-Zahnleistung (100 % Gold- &amp; Keramikinlays)</label>
+          <label><input type="checkbox" name="wunsch_zahnersatz_90" value="ja"> 90 % Zahnersatz</label>
+          <label><input type="checkbox" name="wunsch_zahnersatz_70" value="ja"> 70 % Zahnersatz</label>
+        </div>
+        <div class="inline-options" style="margin-top: 6px;">
+          <label><input type="checkbox" name="wunsch_1klasse_privatkliniken" value="ja"> 1. Klasse Medizin mit Privatkliniken</label>
+          <label><input type="checkbox" name="wunsch_privatkliniken_ohne_wahl" value="ja"> Privatkliniken ohne wahlärztliche Leistungen</label>
+        </div>
+        <div class="inline-options" style="margin-top: 6px;">
+          <label><input type="checkbox" name="wunsch_ahb_reha" value="ja"> Anschlussheilbehandlung / Reha umfangreich versichert</label>
+          <label><input type="checkbox" name="wunsch_medikamente" value="ja"> Hochwertige Medikamente</label>
+          <label><input type="checkbox" name="wunsch_facharztwahl" value="ja"> Direkte Facharztwahl</label>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top: 10px;">
+        <label>Was ist Ihnen darüber hinaus noch wichtig?</label>
+        <textarea name="wichtige_aspekte" placeholder="Freifeld für individuelle Wünsche, z. B. Naturheilverfahren, Heilpraktiker, Auslandsschutz usw."></textarea>
+      </div>
+
+      <div class="field" style="margin-top: 10px;">
+        <label>Freies Feld für Absicherungswunsch (zusätzliche Anmerkungen)</label>
+        <textarea name="freies_feld_absicherungswunsch"></textarea>
+      </div>
+    </div>
+
+    <!-- GESUNDHEITLICHE ANGABEN -->
+    <h2><span class="section-icon">🩻</span>7. Gesundheitliche Angaben</h2>
+    <div class="card">
+      <p class="small-note">
+        Vorerkrankungen der letzten <strong>3 Jahre ambulant</strong> und <strong>5 Jahre stationär</strong>,
+        psychotherapeutische Behandlungen im Abfragezeitraum <strong>10 Jahre</strong>.
+      </p>
+
+      <!-- Allgemeine Gesundheitsangaben Hauptperson -->
+      <div class="grid-3" style="margin-top: 8px;">
+        <div class="field">
+          <label>Körpergröße (Hauptperson)</label>
+          <input type="text" name="koerpergroesse" placeholder="z. B. 180 cm">
+        </div>
+        <div class="field">
+          <label>Gewicht (Hauptperson)</label>
+          <input type="text" name="gewicht" placeholder="z. B. 80 kg">
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="field">
+        <label>Wird eine Sehhilfe getragen? (Hauptperson)</label>
+        <div class="inline-options">
+          <label><input type="radio" name="sehhilfe" value="ja"> ja</label>
+          <label><input type="radio" name="sehhilfe" value="nein"> nein</label>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="field">
+          <label>Dioptrien rechts (Sphäre / ggf. Zylinder)</label>
+          <input type="text" name="dioptrien_rechts" placeholder="z. B. -2,50 / -0,75">
+        </div>
+        <div class="field">
+          <label>Dioptrien links (Sphäre / ggf. Zylinder)</label>
+          <input type="text" name="dioptrien_links" placeholder="z. B. -2,00 / -0,50">
+        </div>
+        <div class="field">
+          <label>Art der Sehhilfe</label>
+          <input type="text" name="sehhilfe_art" placeholder="z. B. Brille, Kontaktlinsen">
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- Vorerkrankungen / Diagnosen / Medikamente pro Person -->
+      <h3>Vorerkrankungen / Diagnosen / Medikamente je Person</h3>
+      <p class="section-caption">
+        Bitte je Diagnose / Behandlung / Medikamente möglichst präzise beschreiben. Weitere Blöcke können bei Bedarf kopiert werden.
+      </p>
+
+      <!-- Hauptperson -->
+      <details class="person-section" id="health_p1" open>
+        <summary>
+          <div class="person-summary-left">
+            <span class="person-avatar">1</span>
+            <span><strong>Hauptperson – Gesundheitliche Angaben</strong></span>
+          </div>
+          <span class="tag-soft">auf-/zuklappen</span>
+        </summary>
+        <div class="card person-card">
+          <!-- Diagnose-Blöcke Hauptperson -->
+          <div class="highlight-box">
+            <div class="field">
+              <label>Diagnose / Behandlung / Medikamente 1</label>
+              <textarea name="p1_diag1_beschreibung" placeholder="z. B. Hypertonie, regelmäßige Kontrolle, Medikament X 5 mg täglich"></textarea>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Behandlungsbeginn (Monat/Jahr)</label>
+                <input type="text" name="p1_diag1_beginn" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Behandlungsende (Monat/Jahr)</label>
+                <input type="text" name="p1_diag1_ende" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Ambulant / stationär / psychotherapeutisch</label>
+                <input type="text" name="p1_diag1_art" placeholder="z. B. ambulant">
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <div class="field">
+              <label>Diagnose / Behandlung / Medikamente 2</label>
+              <textarea name="p1_diag2_beschreibung"></textarea>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Behandlungsbeginn (Monat/Jahr)</label>
+                <input type="text" name="p1_diag2_beginn" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Behandlungsende (Monat/Jahr)</label>
+                <input type="text" name="p1_diag2_ende" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Ambulant / stationär / psychotherapeutisch</label>
+                <input type="text" name="p1_diag2_art">
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <div class="field">
+              <label>Diagnose / Behandlung / Medikamente 3</label>
+              <textarea name="p1_diag3_beschreibung"></textarea>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Behandlungsbeginn (Monat/Jahr)</label>
+                <input type="text" name="p1_diag3_beginn" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Behandlungsende (Monat/Jahr)</label>
+                <input type="text" name="p1_diag3_ende" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Ambulant / stationär / psychotherapeutisch</label>
+                <input type="text" name="p1_diag3_art">
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- Person 2 -->
+      <details class="person-section" id="health_p2">
+        <summary>
+          <div class="person-summary-left">
+            <span class="person-avatar">2</span>
+            <span><strong>Person 2 – Gesundheitliche Angaben</strong></span>
+          </div>
+          <span class="tag-soft">optional</span>
+        </summary>
+        <div class="card person-card">
+          <div class="highlight-box">
+            <div class="field">
+              <label>Diagnose / Behandlung / Medikamente 1</label>
+              <textarea name="p2_diag1_beschreibung"></textarea>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Behandlungsbeginn (Monat/Jahr)</label>
+                <input type="text" name="p2_diag1_beginn" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Behandlungsende (Monat/Jahr)</label>
+                <input type="text" name="p2_diag1_ende" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Ambulant / stationär / psychotherapeutisch</label>
+                <input type="text" name="p2_diag1_art">
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <div class="field">
+              <label>Diagnose / Behandlung / Medikamente 2</label>
+              <textarea name="p2_diag2_beschreibung"></textarea>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Behandlungsbeginn (Monat/Jahr)</label>
+                <input type="text" name="p2_diag2_beginn" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Behandlungsende (Monat/Jahr)</label>
+                <input type="text" name="p2_diag2_ende" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Ambulant / stationär / psychotherapeutisch</label>
+                <input type="text" name="p2_diag2_art">
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- Person 3 -->
+      <details class="person-section" id="health_p3">
+        <summary>
+          <div class="person-summary-left">
+            <span class="person-avatar">3</span>
+            <span><strong>Person 3 – Gesundheitliche Angaben</strong></span>
+          </div>
+          <span class="tag-soft">optional</span>
+        </summary>
+        <div class="card person-card">
+          <div class="highlight-box">
+            <div class="field">
+              <label>Diagnose / Behandlung / Medikamente 1</label>
+              <textarea name="p3_diag1_beschreibung"></textarea>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Behandlungsbeginn (Monat/Jahr)</label>
+                <input type="text" name="p3_diag1_beginn" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Behandlungsende (Monat/Jahr)</label>
+                <input type="text" name="p3_diag1_ende" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Ambulant / stationär / psychotherapeutisch</label>
+                <input type="text" name="p3_diag1_art">
+              </div>
+            </div>
+          </div>
+
+          <div class="highlight-box">
+            <div class="field">
+              <label>Diagnose / Behandlung / Medikamente 2</label>
+              <textarea name="p3_diag2_beschreibung"></textarea>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Behandlungsbeginn (Monat/Jahr)</label>
+                <input type="text" name="p3_diag2_beginn" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Behandlungsende (Monat/Jahr)</label>
+                <input type="text" name="p3_diag2_ende" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Ambulant / stationär / psychotherapeutisch</label>
+                <input type="text" name="p3_diag2_art">
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- Person 4 -->
+      <details class="person-section" id="health_p4">
+        <summary>
+          <div class="person-summary-left">
+            <span class="person-avatar">4</span>
+            <span><strong>Person 4 – Gesundheitliche Angaben</strong></span>
+          </div>
+          <span class="tag-soft">optional</span>
+        </summary>
+        <div class="card person-card">
+          <div class="highlight-box">
+            <div class="field">
+              <label>Diagnose / Behandlung / Medikamente 1</label>
+              <textarea name="p4_diag1_beschreibung"></textarea>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Behandlungsbeginn (Monat/Jahr)</label>
+                <input type="text" name="p4_diag1_beginn" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Behandlungsende (Monat/Jahr)</label>
+                <input type="text" name="p4_diag1_ende" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Ambulant / stationär / psychotherapeutisch</label>
+                <input type="text" name="p4_diag1_art">
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <!-- Person 5 -->
+      <details class="person-section" id="health_p5">
+        <summary>
+          <div class="person-summary-left">
+            <span class="person-avatar">5</span>
+            <span><strong>Person 5 – Gesundheitliche Angaben</strong></span>
+          </div>
+          <span class="tag-soft">optional</span>
+        </summary>
+        <div class="card person-card">
+          <div class="highlight-box">
+            <div class="field">
+              <label>Diagnose / Behandlung / Medikamente 1</label>
+              <textarea name="p5_diag1_beschreibung"></textarea>
+            </div>
+            <div class="grid-3">
+              <div class="field">
+                <label>Behandlungsbeginn (Monat/Jahr)</label>
+                <input type="text" name="p5_diag1_beginn" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Behandlungsende (Monat/Jahr)</label>
+                <input type="text" name="p5_diag1_ende" value="MM/JJJJ">
+              </div>
+              <div class="field">
+                <label>Ambulant / stationär / psychotherapeutisch</label>
+                <input type="text" name="p5_diag1_art">
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <hr class="section-divider">
+
+      <!-- Anomalien -->
+      <div class="field">
+        <label>Bestehen Anomalien?</label>
+        <div class="inline-options">
+          <label><input type="radio" name="anomalien" value="ja"> ja</label>
+          <label><input type="radio" name="anomalien" value="nein"> nein</label>
+        </div>
+        <textarea name="anomalien_beschreibung" placeholder="Falls ja: Bitte Art der Anomalie, bisherige Abklärung und Behandlung beschreiben."></textarea>
+      </div>
+
+      <hr class="section-divider">
+
+      <!-- Zahnärztliche Angaben pro Person -->
+      <h3>Zahnärztliche Angaben je Person</h3>
+
+      <!-- Hauptperson -->
+      <details class="person-section" id="dental_p1" open>
+        <summary>
+          <div class="person-summary-left">
+            <span class="person-avatar">1</span>
+            <span><strong>Hauptperson – Zahnärztliche Angaben</strong></span>
+          </div>
+          <span class="tag-soft">auf-/zuklappen</span>
+        </summary>
+        <div class="card person-card">
+          <div class="grid-2">
+            <div class="field">
+              <label>Fehlen Zähne (außer Weisheitszähne und Lückenschluss)?</label>
+              <div class="inline-options">
+                <label><input type="radio" name="p1_zaehne_fehlend" value="ja"> ja</label>
+                <label><input type="radio" name="p1_zaehne_fehlend" value="nein"> nein</label>
+              </div>
+              <textarea name="p1_zaehne_fehlend_details" placeholder="Falls ja: Welche Zähne fehlen? (Zahnschema, Positionen)"></textarea>
+            </div>
+
+            <div class="field">
+              <label>Besteht Zahnersatz, der älter als sechs Jahre ist?</label>
+              <div class="inline-options">
+                <label><input type="radio" name="p1_zahnersatz_aelter6" value="ja"> ja</label>
+                <label><input type="radio" name="p1_zahnersatz_aelter6" value="nein"> nein</label>
+              </div>
+              <textarea name="p1_zahnersatz_aelter6_details" placeholder="Falls ja: Art und Umfang des Zahnersatzes (Kronen, Brücken, Implantate usw.)."></textarea>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 8px;">
+            <label>Findet zurzeit eine zahnärztliche Behandlung statt oder sind Behandlungen angeraten?</label>
+            <div class="inline-options">
+              <label><input type="radio" name="p1_zahn_behandlung_aktuell" value="ja"> ja</label>
+              <label><input type="radio" name="p1_zahn_behandlung_aktuell" value="nein"> nein</label>
+            </div>
+            <textarea name="p1_zahn_behandlung_details" placeholder="Falls ja: Bitte kurz beschreiben (geplante Maßnahmen, Kostenvoranschläge). H + K bitte vorlegen."></textarea>
+          </div>
+        </div>
+      </details>
+
+      <!-- Person 2 -->
+      <details class="person-section" id="dental_p2">
+        <summary>
+          <div class="person-summary-left">
+            <span class="person-avatar">2</span>
+            <span><strong>Person 2 – Zahnärztliche Angaben</strong></span>
+          </div>
+          <span class="tag-soft">optional</span>
+        </summary>
+        <div class="card person-card">
+          <div class="grid-2">
+            <div class="field">
+              <label>Fehlen Zähne (außer Weisheitszähne und Lückenschluss)?</label>
+              <div class="inline-options">
+                <label><input type="radio" name="p2_zaehne_fehlend" value="ja"> ja</label>
+                <label><input type="radio" name="p2_zaehne_fehlend" value="nein"> nein</label>
+              </div>
+              <textarea name="p2_zaehne_fehlend_details"></textarea>
+            </div>
+
+            <div class="field">
+              <label>Besteht Zahnersatz, der älter als sechs Jahre ist?</label>
+              <div class="inline-options">
+                <label><input type="radio" name="p2_zahnersatz_aelter6" value="ja"> ja</label>
+                <label><input type="radio" name="p2_zahnersatz_aelter6" value="nein"> nein</label>
+              </div>
+              <textarea name="p2_zahnersatz_aelter6_details"></textarea>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 8px;">
+            <label>Findet zurzeit eine zahnärztliche Behandlung statt oder sind Behandlungen angeraten?</label>
+            <div class="inline-options">
+              <label><input type="radio" name="p2_zahn_behandlung_aktuell" value="ja"> ja</label>
+              <label><input type="radio" name="p2_zahn_behandlung_aktuell" value="nein"> nein</label>
+            </div>
+            <textarea name="p2_zahn_behandlung_details"></textarea>
+          </div>
+        </div>
+      </details>
+
+      <!-- Person 3 -->
+      <details class="person-section" id="dental_p3">
+        <summary>
+          <div class="person-summary-left">
+            <span class="person-avatar">3</span>
+            <span><strong>Person 3 – Zahnärztliche Angaben</strong></span>
+          </div>
+          <span class="tag-soft">optional</span>
+        </summary>
+        <div class="card person-card">
+          <div class="grid-2">
+            <div class="field">
+              <label>Fehlen Zähne (außer Weisheitszähne und Lückenschluss)?</label>
+              <div class="inline-options">
+                <label><input type="radio" name="p3_zaehne_fehlend" value="ja"> ja</label>
+                <label><input type="radio" name="p3_zaehne_fehlend" value="nein"> nein</label>
+              </div>
+              <textarea name="p3_zaehne_fehlend_details"></textarea>
+            </div>
+
+            <div class="field">
+              <label>Besteht Zahnersatz, der älter als sechs Jahre ist?</label>
+              <div class="inline-options">
+                <label><input type="radio" name="p3_zahnersatz_aelter6" value="ja"> ja</label>
+                <label><input type="radio" name="p3_zahnersatz_aelter6" value="nein"> nein</label>
+              </div>
+              <textarea name="p3_zahnersatz_aelter6_details"></textarea>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 8px;">
+            <label>Findet zurzeit eine zahnärztliche Behandlung statt oder sind Behandlungen angeraten?</label>
+            <div class="inline-options">
+              <label><input type="radio" name="p3_zahn_behandlung_aktuell" value="ja"> ja</label>
+              <label><input type="radio" name="p3_zahn_behandlung_aktuell" value="nein"> nein</label>
+            </div>
+            <textarea name="p3_zahn_behandlung_details"></textarea>
+          </div>
+        </div>
+      </details>
+
+      <!-- Person 4 -->
+      <details class="person-section" id="dental_p4">
+        <summary>
+          <div class="person-summary-left">
+            <span class="person-avatar">4</span>
+            <span><strong>Person 4 – Zahnärztliche Angaben</strong></span>
+          </div>
+          <span class="tag-soft">optional</span>
+        </summary>
+        <div class="card person-card">
+          <div class="grid-2">
+            <div class="field">
+              <label>Fehlen Zähne (außer Weisheitszähne und Lückenschluss)?</label>
+              <div class="inline-options">
+                <label><input type="radio" name="p4_zaehne_fehlend" value="ja"> ja</label>
+                <label><input type="radio" name="p4_zaehne_fehlend" value="nein"> nein</label>
+              </div>
+              <textarea name="p4_zaehne_fehlend_details"></textarea>
+            </div>
+
+            <div class="field">
+              <label>Besteht Zahnersatz, der älter als sechs Jahre ist?</label>
+              <div class="inline-options">
+                <label><input type="radio" name="p4_zahnersatz_aelter6" value="ja"> ja</label>
+                <label><input type="radio" name="p4_zahnersatz_aelter6" value="nein"> nein</label>
+              </div>
+              <textarea name="p4_zahnersatz_aelter6_details"></textarea>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 8px;">
+            <label>Findet zurzeit eine zahnärztliche Behandlung statt oder sind Behandlungen angeraten?</label>
+            <div class="inline-options">
+              <label><input type="radio" name="p4_zahn_behandlung_aktuell" value="ja"> ja</label>
+              <label><input type="radio" name="p4_zahn_behandlung_aktuell" value="nein"> nein</label>
+            </div>
+            <textarea name="p4_zahn_behandlung_details"></textarea>
+          </div>
+        </div>
+      </details>
+
+      <!-- Person 5 -->
+      <details class="person-section" id="dental_p5">
+        <summary>
+          <div class="person-summary-left">
+            <span class="person-avatar">5</span>
+            <span><strong>Person 5 – Zahnärztliche Angaben</strong></span>
+          </div>
+          <span class="tag-soft">optional</span>
+        </summary>
+        <div class="card person-card">
+          <div class="grid-2">
+            <div class="field">
+              <label>Fehlen Zähne (außer Weisheitszähne und Lückenschluss)?</label>
+              <div class="inline-options">
+                <label><input type="radio" name="p5_zaehne_fehlend" value="ja"> ja</label>
+                <label><input type="radio" name="p5_zaehne_fehlend" value="nein"> nein</label>
+              </div>
+              <textarea name="p5_zaehne_fehlend_details"></textarea>
+            </div>
+
+            <div class="field">
+              <label>Besteht Zahnersatz, der älter als sechs Jahre ist?</label>
+              <div class="inline-options">
+                <label><input type="radio" name="p5_zahnersatz_aelter6" value="ja"> ja</label>
+                <label><input type="radio" name="p5_zahnersatz_aelter6" value="nein"> nein</label>
+              </div>
+              <textarea name="p5_zahnersatz_aelter6_details"></textarea>
+            </div>
+          </div>
+
+          <div class="field" style="margin-top: 8px;">
+            <label>Findet zurzeit eine zahnärztliche Behandlung statt oder sind Behandlungen angeraten?</label>
+            <div class="inline-options">
+              <label><input type="radio" name="p5_zahn_behandlung_aktuell" value="ja"> ja</label>
+              <label><input type="radio" name="p5_zahn_behandlung_aktuell" value="nein"> nein</label>
+            </div>
+            <textarea name="p5_zahn_behandlung_details"></textarea>
+          </div>
+        </div>
+      </details>
+
+      <p class="section-caption">
+        Hinweis: H + K (Heil- und Kostenpläne) zu aktuellen oder angeratenen Behandlungen bitte dem Antrag beifügen.
+      </p>
+    </div>
+
+    <!-- TIPPS RISIKOVORANFRAGE -->
+    <h2><span class="section-icon">💡</span>8. Tipps für die Risikovorabanfrage &amp; Antrag</h2>
+    <div class="card">
+      <p class="small-note">
+        Diese Checkliste unterstützt dabei, medizinische Angaben für Risikovoranfragen und Anträge vollständig
+        und einheitlich aufzubereiten.
+      </p>
+
+      <h3>1. Gesundheitsfragen – typische Themen</h3>
+      <div class="field">
+        <span class="checkbox-group-title">Bitte zu folgenden Punkten gezielt nachfragen und dokumentieren:</span>
+        <div class="inline-options">
+          <label><input type="checkbox">
+            Frakturen – ist noch Material (Schrauben, Platten etc.) im Körper? Entfernung geplant?</label>
+        </div>
+        <div class="inline-options">
+          <label><input type="checkbox">
+            Bluthochdruck – wie sind die aktuellen Werte? Welche Medikamente (Name, Dosierung)?</label>
+        </div>
+        <div class="inline-options">
+          <label><input type="checkbox">
+            Migräne – wie häufig pro Monat? Welche Medikamente, Bedarfs- oder Dauertherapie?</label>
+        </div>
+        <div class="inline-options">
+          <label><input type="checkbox">
+            Allergien – besteht zusätzlich Asthma? Wie häufig Beschwerden, saisonal oder ganzjährig?</label>
+        </div>
+        <div class="inline-options">
+          <label><input type="checkbox">
+            Asthma – letzter Anfall, Häufigkeit, aktuelle Therapie inkl. Bedarfsspray?</label>
+        </div>
+        <div class="inline-options">
+          <label><input type="checkbox">
+            Schilddrüsenknoten – „heißer“ oder „kalter“ Knoten? Kontrollen / Verlauf bekannt?</label>
+        </div>
+        <div class="inline-options">
+          <label><input type="checkbox">
+            Cholesterin – werden Medikamente genommen? Letzte Cholesterin-/Triglyzerid-Werte notiert?</label>
+        </div>
+        <div class="inline-options">
+          <label><input type="checkbox">
+            Neurodermitis / Schuppenflechte – betroffene Körperstellen, Ausdehnung, Therapieform?</label>
+        </div>
+      </div>
+
+      <hr class="section-divider">
+
+      <h3>2. Ergänzende Hinweise</h3>
+      <div class="grid-2">
+        <div class="field">
+          <label>Seit wann behandlungs- und beschwerdefrei? (Monat / Jahr)</label>
+          <input type="text" name="rva_behandlungsfrei" placeholder="z. B. seit 04/2022">
+        </div>
+        <div class="field">
+          <label>Weitere Anmerkungen zur Risikoeinschätzung</label>
+          <textarea name="rva_medikamente" placeholder="z. B. stabile Verläufe, langfristige Therapietreue, erfolgte Reha-Maßnahmen"></textarea>
+        </div>
+      </div>
+
+      <hr class="section-divider">
+
+      <h3>3. Gendiagnostik</h3>
+      <div class="field">
+        <p class="section-caption">
+          Ergebnisse prädiktiver Gentests dürfen nur angegeben werden, wenn dies nach dem Gendiagnostikgesetz
+          zulässig ist. Ansonsten nicht aufführen – im Zweifel Rücksprache halten.
+        </p>
+        <div class="inline-options">
+          <label><input type="checkbox" name="rva_gendiagnostik_geprueft" value="ja">
+            Hinweis Gendiagnostikgesetz geprüft / mit Kunden besprochen</label>
+        </div>
+      </div>
+
+      <hr class="section-divider">
+
+      <h3>4. Unterlagen für die Risikovorabanfrage beifügen</h3>
+      <div class="field">
+        <span class="checkbox-group-title">Bitte – soweit vorhanden – beifügen:</span>
+        <div class="inline-options">
+          <label><input type="checkbox">
+            Entlassungsberichte, aktuelle Arztberichte</label>
+          <label><input type="checkbox">
+            Bildgebende Befunde der letzten 24 Monate (z. B. MRT, Röntgen, Endoskopie)</label>
+        </div>
+        <div class="inline-options">
+          <label><input type="checkbox">
+            Heil- und Kostenpläne (z. B. Zahnersatz / Kieferorthopädie)</label>
+          <label><input type="checkbox">
+            Übersichten über bestehende oder abgelehnte Versicherungen / Voranfragen</label>
+        </div>
+      </div>
+
+      <p class="section-caption">
+        Tipp: Immer deutlich kennzeichnen, dass es sich um eine unverbindliche Risikovoranfrage handelt und den
+        gewünschten Versicherer („Risikoträger“) klar benennen.
+      </p>
+    </div>
+
+    <!-- ABSCHLUSS -->
+    <h2><span class="section-icon">✍️</span>9. Unterschriften / Beratungsvermerk</h2>
+    <div class="card">
+      <div class="grid-2">
+        <div class="field">
+          <label>Ort / Datum</label>
+          <input type="text" name="ort_datum" placeholder="Ort, Datum">
+        </div>
+        <div class="field">
+          <label>Berater / Vermittler</label>
+          <input type="text" name="berater" placeholder="Name / Vermittlernummer / Gesellschaft">
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 10px;">
+        <div class="field">
+          <label>Unterschrift Kunde</label>
+          <input type="text" name="unterschrift_kunde" placeholder="(Platz für handschriftliche Unterschrift beim Ausdruck)">
+        </div>
+        <div class="field">
+          <label>Unterschrift Berater</label>
+          <input type="text" name="unterschrift_berater" placeholder="(Platz für handschriftliche Unterschrift beim Ausdruck)">
+        </div>
+      </div>
+      <p class="section-caption">
+        Hinweis: Dieses Formular dient der strukturierten Erfassung aller für die PKV-Beratungsdokumentation relevanten Daten.
+      </p>
+    </div>
+
+  </form>
+
+  <div class="footer-note">
+    &copy; 2026 Jürgen Matterne &nbsp;·&nbsp; Version 12.2025<br>
+    E-Mail: <a href="mailto:juergen.matterne@vk-makler.de">juergen.matterne@vk-makler.de</a>
+    &nbsp;·&nbsp;
+    Mobil: <a href="tel:+491733206212">+49&nbsp;173&nbsp;3206212</a>
+  </div>
+</div>
+
+<script>
+  // Geburtsdatum-Dropdowns automatisch befüllen
+  (function fillDateDropdowns() {
+    const daySelects = document.querySelectorAll('.geb-tag');
+    const monthSelects = document.querySelectorAll('.geb-monat');
+    const yearSelects = document.querySelectorAll('.geb-jahr');
+
+    daySelects.forEach(sel => {
+      sel.innerHTML = '<option value="">Tag</option>';
+      for (let d = 1; d <= 31; d++) {
+        const opt = document.createElement('option');
+        opt.value = d.toString().padStart(2, '0');
+        opt.textContent = d.toString().padStart(2, '0');
+        sel.appendChild(opt);
+      }
+    });
+
+    const monthNames = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+    monthSelects.forEach(sel => {
+      sel.innerHTML = '<option value="">Monat</option>';
+      monthNames.forEach((m) => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        sel.appendChild(opt);
+      });
+    });
+
+    const currentYear = new Date().getFullYear();
+    yearSelects.forEach(sel => {
+      sel.innerHTML = '<option value="">Jahr</option>';
+      for (let y = currentYear; y >= 1925; y--) {
+        const opt = document.createElement('option');
+        opt.value = y;
+        opt.textContent = y;
+        sel.appendChild(opt);
+      }
+    });
+  })();
+
+  // Sichtbarkeit der Krankentagegeld-Blöcke abhängig vom Status Person 1
+  (function setupKTVisibility() {
+    const chkAngestellt = document.querySelector('input[name="p1_status_angestellt"]');
+    const chkSelbst     = document.querySelector('input[name="p1_status_selbst"]');
+    const chkFrei       = document.querySelector('input[name="p1_status_frei"]');
+    const chkBeihilfe   = document.querySelector('input[name="p1_status_beihilfe"]');
+
+    const blockAN = document.getElementById('kt_block_an');
+    const blockS  = document.getElementById('kt_block_s');
+    const blockF  = document.getElementById('kt_block_f');
+
+    function updateKTVisibility() {
+      const isAngestellt = chkAngestellt && chkAngestellt.checked;
+      const isSelbst     = chkSelbst && chkSelbst.checked;
+      const isFrei       = chkFrei && chkFrei.checked;
+      const isBeihilfe   = chkBeihilfe && chkBeihilfe.checked;
+
+      if (isBeihilfe) {
+        blockAN.classList.add('hidden');
+        blockS.classList.add('hidden');
+        blockF.classList.add('hidden');
+        return;
+      }
+
+      if (isAngestellt) {
+        blockAN.classList.remove('hidden');
+        blockS.classList.add('hidden');
+        blockF.classList.add('hidden');
+      } else if (isSelbst) {
+        blockAN.classList.add('hidden');
+        blockS.classList.remove('hidden');
+        blockF.classList.add('hidden');
+      } else if (isFrei) {
+        blockAN.classList.add('hidden');
+        blockS.classList.add('hidden');
+        blockF.classList.remove('hidden');
+      } else {
+        blockAN.classList.add('hidden');
+        blockS.classList.add('hidden');
+        blockF.classList.add('hidden');
+      }
+    }
+
+    [chkAngestellt, chkSelbst, chkFrei, chkBeihilfe].forEach(el => {
+      if (el) {
+        el.addEventListener('change', updateKTVisibility);
+      }
+    });
+
+    updateKTVisibility();
+  })();
+
+  // Health- und Dental-Dropdowns automatisch öffnen, wenn Personen 2-5 befüllt werden
+  (function setupPersonHealthDentalOpen() {
+    const nameFields = {
+      2: document.querySelector('input[name="p2_name"]'),
+      3: document.querySelector('input[name="p3_name"]'),
+      4: document.querySelector('input[name="p4_name"]'),
+      5: document.querySelector('input[name="p5_name"]')
+    };
+
+    const healthDetails = {
+      2: document.getElementById('health_p2'),
+      3: document.getElementById('health_p3'),
+      4: document.getElementById('health_p4'),
+      5: document.getElementById('health_p5')
+    };
+
+    const dentalDetails = {
+      2: document.getElementById('dental_p2'),
+      3: document.getElementById('dental_p3'),
+      4: document.getElementById('dental_p4'),
+      5: document.getElementById('dental_p5')
+    };
+
+    function updateOpenState(idx) {
+      const field = nameFields[idx];
+      const hasValue = field && field.value.trim() !== '';
+      const h = healthDetails[idx];
+      const d = dentalDetails[idx];
+      if (h) h.open = hasValue;
+      if (d) d.open = hasValue;
+    }
+
+    [2,3,4,5].forEach(i => {
+      const field = nameFields[i];
+      if (field) {
+        field.addEventListener('input', () => updateOpenState(i));
+        updateOpenState(i);
+      }
+    });
+  })();
+</script>
+</body>
+</html>
